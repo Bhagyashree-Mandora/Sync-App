@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+<EditText android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textMultiLine" android:bufferType="editable" android:height="100px" android:hint="Enter Your Text Here" android:id="@+id/mainText1">
+    <requestFocus></requestFocus>
+</EditText>
+</LinearLayout>
