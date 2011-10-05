@@ -2,4 +2,5 @@
 <resources>
     <string name="hello">Hello World, DropboxActivity!</string>
     <string name="app_name">Dropbox</string>
+    <string name="view1">request token</string>
 </resources>
