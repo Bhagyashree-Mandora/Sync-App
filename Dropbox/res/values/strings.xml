@@ -3,4 +3,7 @@
     <string name="hello">Hello World, DropboxActivity!</string>
     <string name="app_name">Dropbox</string>
     <string name="view1">request token</string>
+    <string name="ACCESS_KEY_NAME">ACCESS_KEY</string>
+    <string name="ACCESS_SECRET_NAME">ACCESS_SECRET</string>
+    <string name="ACCOUNT_PREFS_NAME">prefs</string>
 </resources>

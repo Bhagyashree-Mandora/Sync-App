@@ -24,8 +24,14 @@ import android.widget.TextView;
 
 
 public class DropboxViewActivity extends Activity{
+	//MobConnect app
 	private final static String APP_KEY = "iypm3vb6d6vxha0";
     private final static String APP_SECRET = "e1kq1rhpwu6dfhx";
+    //SyncApp app
+    /*private final static String APP_KEY = "9xok2kilzjn2r1p";
+    private final static String APP_SECRET = "szsiqick0cqrcu8";*/
+    
+    
 	private static final String ACCESS_KEY_NAME = "ACCESS_KEY";
 	private static final String ACCESS_SECRET_NAME = "ACCESS_SECRET";
 	private static final String ACCOUNT_PREFS_NAME = "prefs";
@@ -69,17 +75,22 @@ public class DropboxViewActivity extends Activity{
     Uri uri = (Uri) this.getIntent().getData();
     
     try{
-    	SharedPreferences prefs = getSharedPreferences(ACCOUNT_PREFS_NAME, 0);
-        mainText.setText(uri.toString()+"and token is'"+uri.getQueryParameters("oauth_token").get(0)+"'");
+    	
+        
+    	mainText.setText(uri.toString()+"and token is'"+uri.getQueryParameters("oauth_token").get(0)+"'");
     	String token =uri.getQueryParameters("oauth_token").get(0).toString();
     	String secret =uri.getQueryParameters("uid").get(0).toString();
     		consumer.setTokenWithSecret(token, secret);
-    	if(prefs.getBoolean(ACCESS_KEY_NAME, false)){    		
+    	    		
     provider.retrieveAccessToken(consumer, token);
     storeKeys(consumer.getToken(),	consumer.getTokenSecret());
     text.setText(consumer.getTokenSecret()+"and token is"+consumer.getToken());
-    	}
-    
+    	
+    /*URL url = new URL("https://api.dropbox.com/0/account_info");
+	
+    HttpURLConnection request = (HttpURLConnection) url.openConnection();
+    consumer.sign(request);
+    text.setText(request.getResponseCode());*/
     }catch(OAuthCommunicationException e)
     {
     	
@@ -109,6 +120,7 @@ public class DropboxViewActivity extends Activity{
         // Save the access key for later
         SharedPreferences prefs = getSharedPreferences(ACCOUNT_PREFS_NAME, 0);
         Editor edit = prefs.edit();
+        edit.clear();
         edit.putString(ACCESS_KEY_NAME, key);
         edit.putString(ACCESS_SECRET_NAME, secret);
         edit.commit();
