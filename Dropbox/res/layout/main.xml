@@ -7,5 +7,6 @@
 <Button android:id="@+id/buttonSave" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Get Details"></Button>
 <Button android:id="@+id/button1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Register"></Button>
 <Button android:id="@+id/button2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Read File"></Button>
+<Button android:id="@+id/button3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Logout"></Button>
 <TextView android:text="TextView" android:id="@+id/textView1" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
 </LinearLayout>

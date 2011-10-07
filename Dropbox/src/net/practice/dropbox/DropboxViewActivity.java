@@ -84,7 +84,8 @@ public class DropboxViewActivity extends Activity{
     	    		
     provider.retrieveAccessToken(consumer, token);
     storeKeys(consumer.getToken(),	consumer.getTokenSecret());
-    text.setText(consumer.getTokenSecret()+"and token is"+consumer.getToken());
+    
+    text.setText("Tokens Saved Successfully"+consumer.getTokenSecret()+"and token is"+consumer.getToken());
     	
     /*URL url = new URL("https://api.dropbox.com/0/account_info");
 	

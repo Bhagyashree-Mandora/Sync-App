@@ -18,6 +18,7 @@ import oauth.signpost.exception.OAuthMessageSignerException;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -54,7 +55,7 @@ public class DropboxActivity extends Activity {
         final Button buttonSave = (Button) findViewById(R.id.buttonSave);
         final Button buttonRegister = (Button) findViewById(R.id.button1);
         final Button buttonRead = (Button) findViewById(R.id.button2);
-        
+        final Button buttonLogout = (Button) findViewById(R.id.button3);
         
         /** Set the onClickListener to call the onClick for register button*/
         buttonRegister.setOnClickListener(new Button.OnClickListener() {
@@ -194,10 +195,24 @@ public class DropboxActivity extends Activity {
       
         });
         
+        /** Set the onClickListener to call the onClick for register button*/
+        buttonLogout.setOnClickListener(new Button.OnClickListener(){
+
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				clearKeys();
+				text.setText("Logged Out Successfully");
+			}});
         
     }
      
-   
+    public void clearKeys() {
+        SharedPreferences prefs = getSharedPreferences(ACCOUNT_PREFS_NAME, 0);
+        Editor edit = prefs.edit();
+        edit.clear();
+        edit.commit();
+    }
+    
     /*@Override
     public void onResume()
     {
