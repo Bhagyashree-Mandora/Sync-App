@@ -3,7 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry kind="lib" path="/home/faizan/Desktop/Link to BE/Project/Oauth/joauth_1.2.1.jar"/>
-	<classpathentry kind="lib" path="/home/faizan/Desktop/Link to BE/Project/Oauth/org.json.jar"/>
+	<classpathentry kind="lib" path="/home/faizan/Desktop/Mdropbox/signpost-core-1.2.1.1.jar"/>
+	<classpathentry kind="lib" path="/home/faizan/Desktop/Mdropbox/commons-codec-1.5/commons-codec-1.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

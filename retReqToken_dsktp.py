@@ -6,8 +6,6 @@ import gtk
 from nose.tools import *
 from dropbox import auth
 from helpers import login_and_authorize
-import httplib2
-from httplib2 import socks
 
 
 
@@ -22,16 +20,14 @@ class WriteOperation:
     def writetofile(self, widget, data):
         print "Send button is clicked..."
 #        text = self.entry.get_text()
-        #httplib2.debuglevel=4
-	#h = httplib2.Http(proxy_info = httplib2.ProxyInfo(socks.PROXY_TYPE_HTTP, '192.168.14.254', 3128))
         # This location of file is to be taken from the user's laptop
         # A script which finds the location of the Dropbox folder 
         # needs to be run
 	config = auth.Authenticator.load_config("testing.ini")
 	dba = auth.Authenticator(config)
+	#print "auth server="+auth.client
 	token = dba.obtain_request_token()
 	text.set_text(token)
-	#assert dba.oauth_request
 	#return token
         
     # Causing the close button to close the window

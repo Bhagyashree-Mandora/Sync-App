@@ -5,6 +5,7 @@
       android:versionName="1.0">
     <uses-sdk android:minSdkVersion="8" />
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+   
 
     <application android:icon="@drawable/icon" android:label="@string/app_name">
         <activity android:name=".DropboxActivity"
@@ -12,22 +13,18 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-                <category
-            android:name="android.intent.category.BROWSABLE"
-        ></category>
-    
-            </intent-filter>
+                <category android:name="android.intent.category.BROWSABLE"></category><!--
+       <data android:scheme="MobConnect" android:host="dropbox"></data>
+            --></intent-filter>
         </activity>
-        <!--<activity android:name=".DropboxViewActivity"
-        android:label="@string/app_name">
-         <intent-filter>          
+   
+        <activity android:label="@string/view1" android:name="DropboxViewActivity"><intent-filter>          
     <action android:name="android.intent.action.VIEW"/>     
     <category android:name="android.intent.category.DEFAULT"/>
     <category android:name="android.intent.category.BROWSABLE"/>
-    <data android:scheme="MobConnect" android:host="dropbox"></data>
-        </intent-filter>
-        </activity>
-    -->
+    <data android:scheme="dropbox" ></data>
+        
+        </intent-filter></activity>
     
     </application>
 </manifest>

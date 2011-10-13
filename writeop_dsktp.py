@@ -17,7 +17,7 @@ class WriteOperation:
         # This location of file is to be taken from the user's laptop
         # A script which finds the location of the Dropbox folder 
         # needs to be run
-        myfile = open('/home/bhago/Dropbox/ourfile','w')
+        myfile = open('/home/faizan/Dropbox/ourfile','w')
 	    
         myfile.truncate()
         myfile.write(text)       
