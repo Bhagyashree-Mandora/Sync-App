@@ -91,10 +91,10 @@ class DropboxTerm(cmd.Cmd):
         f =self.api_client.put_file("ourfile.txt",message,True)
         self.stdout.write("\nmessage sent\n")
 
-
     @command()
     def do_listen(self):
         """LISTEN TO FILE ourfile.txt"""
+	import re	
 	while 1:		
        		self.stdout.write("\nListening....")		
         	f = self.api_client.get_file("/ourfile.txt")
@@ -102,6 +102,10 @@ class DropboxTerm(cmd.Cmd):
 	        if message<>" " and message<> "":
         		self.stdout.write("Change Found\nMessage is:")			
         		self.stdout.write(message)
+			#run_command(message)
+			if(re.match("open",message)):
+				self.stdout.write("\nopen command found so opening browser.")
+				os.system("google-chrome "+ message[message.find("http://"):])
         		self.stdout.write("\ndeleting contents of ourfile.txt....")			
 	        	self.api_client.put_file("ourfile.txt"," ",True)
 		else:						
@@ -161,6 +165,10 @@ class DropboxTerm(cmd.Cmd):
             f = getattr(self, 'do_' + cmd_name)
             if f.__doc__:
                 self.stdout.write('%s: %s\n' % (cmd_name, f.__doc__))
+#if it is a command perform the task
+    def run_command(self,command):
+			
+        pass
 
     # the following are for command line magic and aren't Dropbox-related
     def emptyline(self):

@@ -24,7 +24,7 @@ class ApiCheck:
         config = auth.Authenticator.load_config("testing.ini")
         
         dba = auth.Authenticator(config)     
-        access_token=oauth.OAuthToken('r3ie1kzqr0ipxil', 'dbcqrsddgihp3w6')
+        access_token=oauth.OAuthToken('k280uqm85ltjhop', 'bvsi4uto9muxmis')
  
         print access_token
 
@@ -63,7 +63,7 @@ class ApiCheck:
         config = auth.Authenticator.load_config("testing.ini")
         
         dba = auth.Authenticator(config)     
-        access_token=oauth.OAuthToken('r3ie1kzqr0ipxil', 'dbcqrsddgihp3w6')
+        access_token=oauth.OAuthToken('k280uqm85ltjhop', 'bvsi4uto9muxmis')
  
         print access_token
 
@@ -88,7 +88,7 @@ class ApiCheck:
         config = auth.Authenticator.load_config("testing.ini")
         
         dba = auth.Authenticator(config)     
-        access_token=oauth.OAuthToken('r3ie1kzqr0ipxil', 'dbcqrsddgihp3w6')
+        access_token=oauth.OAuthToken('k280uqm85ltjhop', 'bvsi4uto9muxmis')
  
         print access_token
 
