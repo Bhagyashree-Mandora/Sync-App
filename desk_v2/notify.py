@@ -105,7 +105,7 @@ class DropboxTerm(cmd.Cmd):
 			#run_command(message)
 			if(re.match("open",message)):
 				self.stdout.write("\nopen command found so opening browser.")
-				os.system("google-chrome "+ message[message.find("http://"):])
+				os.system("google-chrome "+ message[(message.find("open ")+5):])
         		self.stdout.write("\ndeleting contents of ourfile.txt....")			
 	        	self.api_client.put_file("ourfile.txt"," ",True)
 		else:						
