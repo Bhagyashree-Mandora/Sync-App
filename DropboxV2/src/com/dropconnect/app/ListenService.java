@@ -1,36 +1,26 @@
 package com.dropconnect.app;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.Calendar;
-import java.util.Timer;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.TimerTask;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.dropbox.client2.DropboxAPI;
-import com.dropbox.client2.DropboxAPI.DropboxInputStream;
-import com.dropbox.client2.DropboxAPI.Entry;
 import com.dropbox.client2.android.AndroidAuthSession;
-import com.dropbox.client2.android.AuthActivity;
-import com.dropbox.client2.exception.DropboxException;
 import com.dropbox.client2.session.AccessTokenPair;
 import com.dropbox.client2.session.AppKeyPair;
 import com.dropbox.client2.session.Session.AccessType;
 
 import android.app.Service;
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.SystemClock;
 import android.util.Log;
-import android.widget.Toast;
 
 public class ListenService extends Service {
 
@@ -59,8 +49,8 @@ public class ListenService extends Service {
     final static private String ACCOUNT_PREFS_NAME = "prefs";
     final static private String ACCESS_KEY_NAME = "ACCESS_KEY";
     final static private String ACCESS_SECRET_NAME = "ACCESS_SECRET";
-    
-
+    private static ArrayList<Request> requestMade=new ArrayList<Request>();
+    private static ArrayList<Handlers> handlers=new ArrayList<Handlers>();
     private static DropboxAPI<AndroidAuthSession> mApi;
   
 
@@ -139,7 +129,8 @@ public class ListenService extends Service {
 	@Override
 public int onStartCommand(Intent intent ,int flags,int startid){
 		//Listen if there was any changes in the file
-		
+		///Here we make the list of all Classes than are present in our app that can handle some sort of command
+		ListenService.handlers.add(new Handlers("send", "SendSMS", "SmsHandler"));
 		Log.i("start command","start");
 		if(mApi!=null)
 		{
@@ -197,50 +188,90 @@ private  void listen() {
 		if(!str.equalsIgnoreCase(" ") & !str.equalsIgnoreCase(""))
 		{
 			//Perform action Here...or send data to handler
-			MessHandler messHandler= new MessHandler(str);
-			messHandler.performTask();
+			try {
+				JSONArray array= new JSONArray(str);
+				int i=0;
+				while(i<array.length()){
+					JSONObject Message= array.getJSONObject(i);
+					String type=new String(Message.getString("type"));
+					String command=new String(Message.getString("command"));
+					if(type.equalsIgnoreCase("send")||type.equalsIgnoreCase("request"))
+					{
+						//Search for a class that can handle this
+						//Key for searching is command
+						String ClassName=ListenService.search(command);
+						MessageHandler h= null;
+						Class.forName(ClassName).getMethod(ClassName, JSONObject.class).invoke((Object)h, Message.getJSONObject("data"));
+					}
+					if(type.equalsIgnoreCase("response")){
+						Log.i(getClass().getSimpleName(),"Handling Response");
+						int requestId=Message.getInt("requestId");
+						Request r =search(requestId);
+						r.Data=Message.getJSONObject("data");
+						r.onResponse();
+						requestMade.remove(r);
+					}
+				i++;}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				Log.e(getClass().getSimpleName(), e.toString());
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				Log.e(getClass().getSimpleName(), e.toString());
+			} catch (SecurityException e) {
+				// TODO Auto-generated catch block
+				Log.e(getClass().getSimpleName(), e.toString());
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				Log.e(getClass().getSimpleName(), e.toString());
+			} catch (InvocationTargetException e) {
+				// TODO Auto-generated catch block
+				Log.e(getClass().getSimpleName(), e.toString());
+			} catch (NoSuchMethodException e) {
+				// TODO Auto-generated catch block
+				Log.e(getClass().getSimpleName(), e.toString());
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				Log.e(getClass().getSimpleName(), e.toString());
+			}
 		//delete read message
 		dropbox.write("mobileread", "");
 		}
+
+	}		
+private Request search(int requestId) {
+	// TODO Auto-generated method stub
+	for(int i=0;i<requestMade.size();i++){
+		Request r =requestMade.get(i);
+		if (r.requestID==requestId)
+		{
+				return r;
+		}
 	}
+	return null;
+}
+private static String search(String command) {
+	// TODO Auto-generated method stub
+	Handlers temp;
+	for(int i=0;i<handlers.size();i++)
+	{
+		temp=handlers.get(i);
+		if(temp.command.equalsIgnoreCase(command))
+			return temp.className;
+	}
+	//else return default class than handles all type of data
+	return "DefaultHandler";
+}
+public  static void addRequest(Request r){
+	requestMade.add(r);
+	Log.i("ListenSer--addRequest", "Request-"+r.requestID+" added");
+}
 
 
 
 
    
  
-    private void checkAppKeySetup() {
-        // Check to make sure that we have a valid app key
-        if (APP_KEY.startsWith("CHANGE") ||
-                APP_SECRET.startsWith("CHANGE")) {
-            showToast("You must apply for an app key and secret from developers.dropbox.com, and add them to the DBRoulette ap before trying it.");
-            stopSelf();
-            return;
-        }
-
-        // Check if the app has set up its manifest properly.
-        Intent testIntent = new Intent(Intent.ACTION_VIEW);
-        String scheme = "db-" + APP_KEY;
-        String uri = scheme + "://" + AuthActivity.AUTH_VERSION + "/test";
-        testIntent.setData(Uri.parse(uri));
-        PackageManager pm = getPackageManager();
-        if (0 == pm.queryIntentActivities(testIntent, 0).size()) {
-            showToast("URL scheme in your app's " +
-                    "manifest is not set up correctly. You should have a " +
-                    "com.dropbox.client2.android.AuthActivity with the " +
-                    "scheme: " + scheme);
-            stopSelf();
-        }
-    }
-
-    private void showToast(String msg) {
-        Toast error = Toast.makeText(this, msg, Toast.LENGTH_LONG);
-        error.show();
-    }
-    private void showToast(Context mContext,String msg) {
-        Toast error = Toast.makeText(mContext.getApplicationContext(), msg, Toast.LENGTH_LONG);
-        error.show();
-    }
     /**
      * Shows keeping the access keys returned from Trusted Authenticator in a local
      * store, rather than storing user name & password, and re-authenticating each
@@ -263,27 +294,7 @@ private  void listen() {
         }
     }
 
-    /**
-     * Shows keeping the access keys returned from Trusted Authenticator in a local
-     * store, rather than storing user name & password, and re-authenticating each
-     * time (which is not to be done, ever).
-     */
-    private void storeKeys(String key, String secret) {
-        // Save the access key for later
-        SharedPreferences prefs = getSharedPreferences(ACCOUNT_PREFS_NAME, MODE_WORLD_WRITEABLE);
-        Editor edit = prefs.edit();
-        edit.putString(ACCESS_KEY_NAME, key);
-        edit.putString(ACCESS_SECRET_NAME, secret);
-        edit.commit();
-    }
-
-    private void clearKeys() {
-        SharedPreferences prefs = getSharedPreferences(ACCOUNT_PREFS_NAME, MODE_WORLD_WRITEABLE);
-        Editor edit = prefs.edit();
-        edit.clear();
-        edit.commit();
-    }
-    
+   
     //Builds Android Session
     private AndroidAuthSession buildSession(String[] keys) {
         AppKeyPair appKeyPair = new AppKeyPair(APP_KEY, APP_SECRET);
@@ -299,4 +310,19 @@ private  void listen() {
 
         return session;
     }
+//Hidden Class(hidden from package)
+//used to make a list of Handlers that are registered to this listener     
+class Handlers{
+public Handlers(String type, String command, String className) {
+		super();
+		this.type = type;
+		this.command = command;
+		this.className = className;
+	}
+String type;
+String command;
+String className;
 }
+
+}
+

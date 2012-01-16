@@ -1,6 +1,8 @@
 package com.dropconnect.app;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.apache.http.entity.mime.MinimalField;
@@ -31,6 +33,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.telephony.gsm.SmsManager;
 import android.util.Log;
 import android.view.View;
@@ -38,7 +41,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.SlidingDrawer;
 import android.widget.Toast;
-
+import android.util.Base64;
 public class DropboxV2Activity extends Activity {
 	
 	
@@ -74,6 +77,7 @@ public class DropboxV2Activity extends Activity {
     private boolean mLoggedIn;
     private Button mSubmit; 
     private Button mListen;
+    private Button bGetImage;
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -144,6 +148,59 @@ public class DropboxV2Activity extends Activity {
 			
         });
         
+        //Button to get the image
+        bGetImage = (Button)findViewById(R.id.buttonGetimage);
+        bGetImage.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				//____________________________________________
+				Device Sender= new Device("Mobile");
+				Sender.DeviceReadFile="mobileread";
+				//____________________________________________
+				Device Reciever= new Device("Desktop");
+				Reciever.DeviceReadFile="desktopread";
+				//____________________________________________
+				Command command=new Command("GetImageFromWebcam");
+				//_________________Put Some Data______________
+				JSONObject data=new JSONObject();
+				Request r= new Request(Sender,Reciever,command,data,getApplicationContext()) {
+					
+					@Override
+					public void onResponse() {
+						// TODO Auto-generated method stub
+						try {
+							//Decode and store the file on SD Card
+							String file=this.Data.getString("File");
+							//showToast(file);
+							byte[] decodedFile=Base64.decode(file, Base64.DEFAULT);
+							File root = Environment.getExternalStorageDirectory();
+							FileOutputStream f = new FileOutputStream(new File(root, "image.jpg"));
+							f.write(decodedFile, 0, decodedFile.length);
+				            f.close();
+							//Open the file in default app
+				            Intent intent = new Intent();
+				            intent.setAction(android.content.Intent.ACTION_VIEW);
+				            File file1 = new File(root,"image.jpg");
+				            intent.setDataAndType(Uri.fromFile(file1), "image/*");
+				            startActivity(intent);
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							Log.e(getClass().getSimpleName(),e.toString());
+						} catch (FileNotFoundException e) {
+							// TODO Auto-generated catch block
+							Log.e(getClass().getSimpleName(),e.toString());
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							Log.e(getClass().getSimpleName(),e.toString());
+						}
+					}
+				};
+				r.write();
+			}
+			
+		});
         // Display the proper UI state if logged in or not
         //used to set text on the auth_button
         setLoggedIn(mApi.getSession().isLinked());

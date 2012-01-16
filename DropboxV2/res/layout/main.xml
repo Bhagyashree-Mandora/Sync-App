@@ -6,4 +6,5 @@
     >
 <Button android:layout_width="wrap_content" android:layout_height="wrap_content"  android:id="@+id/auth_button" android:text="Auth"></Button>
 <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/buttonListen" android:text="Listen"></Button>
+<Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Get Image From Webcam" android:id="@+id/buttonGetimage"></Button>
 </LinearLayout>
