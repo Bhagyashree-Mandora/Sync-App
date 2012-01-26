@@ -9,7 +9,8 @@ from dropbox import session
 
 from dropbox import client, rest
 
-
+import ast
+import json
 # XXX Fill in your consumer key and secret below
 # You can find these at http://www.dropbox.com/developers/apps
 APP_KEY = 'iypm3vb6d6vxha0'
@@ -89,7 +90,7 @@ class DropboxTerm(cmd.Cmd):
     @command()
     def do_write(self, message):
         """Write message to ourfile.txt"""
-        f =self.api_client.put_file("ourfile.txt",message,True)
+        f =self.api_client.put_file("mobileread",message,True)
         self.stdout.write("\nmessage sent\n")
 
     @command()
@@ -98,7 +99,7 @@ class DropboxTerm(cmd.Cmd):
 	import re	
 	while 1:		
        		self.stdout.write("\nListening....")		
-        	f = self.api_client.get_file("/ourfile.txt")
+        	f = self.api_client.get_file("mobileread")
 		message=f.read()
 	        if message<>" " and message<> "":
         		self.stdout.write("Change Found\nMessage is:")			
@@ -108,7 +109,7 @@ class DropboxTerm(cmd.Cmd):
 				self.stdout.write("\nopen command found so opening browser.")
 				os.system("google-chrome "+ message[(message.find("open ")+5):])
         		self.stdout.write("\ndeleting contents of ourfile.txt....")			
-	        	self.api_client.put_file("ourfile.txt"," ",True)
+	        	self.api_client.put_file("mobileread"," ",True)
 		else:						
         		self.stdout.write("No change found.")		
 		f.close()
@@ -226,11 +227,31 @@ def main():
         exit("You need to set your APP_KEY and APP_SECRET!")
     term = DropboxTerm(APP_KEY, APP_SECRET)
     #term.cmdloop()
+
+    #stdout.write("\nListening....")		
+    f = term.api_client.get_file("mobileread")
+    message = f.read()
+    
+    if message<>" " and message<> "":              
+        list1 = json.loads(message)
+        #i = list1.index(list1[-1])
+        
+        fob=open('mwrite' , 'r')      
+        xyz = fob.read()
+        fob.close() 
+        
+        uvw = ast.literal_eval(xyz)
+        list1.append(uvw[0])
+        json_obj1 = json.dumps(list1)
+
+        fob = open('mwrite','w')
+        fob.write(json_obj1)
+        fob.close()
         
     fob=open('mwrite' , 'r')
     term.do_write(fob)
     fob.close()
-
+    exit
 
 if __name__ == '__main__':
     main()

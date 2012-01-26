@@ -3,7 +3,7 @@ import device
 import json_crafting
 
 
-class Request(object):
+class RequestHandler(object):
   
     def OnReceive():
         raise notimplementederror
@@ -26,11 +26,12 @@ class Request(object):
 
     def __init__(self, json_data):
 
-        print "json data = " + `json_data`
-        
-        self.sender = device.Device(json_data['receiver'])
-        self.receiver = device.Device(json_data['receiver'])
-        self.req_id = json_data['data']['requestId']
-        self.command = json_data['command']
+        print "json data = " + `json_data[0]`
+        self.received_data = json_data[0]
+
+        self.sender = device.Device(json_data[0]['receiver'])
+        self.receiver = device.Device(json_data[0]['receiver'])
+        self.req_id = json_data[0]['data']['requestId']
+        self.command = json_data[0]['command']
 
         #command = Command(json_data[command])

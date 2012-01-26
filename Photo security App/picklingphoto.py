@@ -4,11 +4,11 @@ import photoapp
 
 
 # A default initialisation of object before pickling.    
-message = {"sender": "my laptop","receiver": "my mobile", "command": "takephoto","req_id":"123","data":{"content": "Hi...string!!", "date": "27", "sender": "ME", "time": "4:30"}}
+message = {"sender": "my laptop","receiver": "my mobile", "command": "takephoto","requestId":"123","data":{"content": "Hi...string!!","requestId": "12", "date": "27", "sender": "ME", "time": "4:30"}}
 
 trial = photoapp.ConcreteClass(message)
 
-output = open('takephoto.pkl', 'wb')
+output = open('photoapp.pkl', 'wb')
 
 # Pickle dictionary using protocol 0.
 pickle.dump(trial, output)
