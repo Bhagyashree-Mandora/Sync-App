@@ -1,0 +1,1 @@
+{u'command': u'sendSMS', u'data': {u'priority': u'normal', u'to_number': u'9158077350', u'message': u'two', u'from_number': u'9764344549', u'type': u'text'}, u'sender': u'Desktop', u'reciever': u'mobile'}
