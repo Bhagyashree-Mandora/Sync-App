@@ -16,7 +16,7 @@ public class Device {
 	
 	public Device(String DeviceName)
 	{
-	
+	this.DeviceName=DeviceName;
 	}
 	public static List<Device> getDeviceList()
 	{	

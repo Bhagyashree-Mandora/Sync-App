@@ -3,8 +3,18 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    >
-<Button android:layout_width="wrap_content" android:layout_height="wrap_content"  android:id="@+id/auth_button" android:text="Auth"></Button>
-<Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/buttonListen" android:text="Listen"></Button>
-<Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Get Image From Webcam" android:id="@+id/buttonGetimage"></Button>
+    android:weightSum="1" android:background="@drawable/white">
+    <TextView android:textAppearance="?android:attr/textAppearanceLarge" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/textView1" android:text="Press the button below get an Image from webcam at your PC" android:textColor="@android:color/darker_gray"></TextView>
+    <RelativeLayout android:layout_height="wrap_content" android:id="@+id/relativeLayout1" android:layout_width="match_parent">
+    
+    <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Get Image From Webcam" android:id="@+id/buttonGetimage"></Button>
+    
+    </RelativeLayout>
+    
+
+<TextView android:textAppearance="?android:attr/textAppearanceSmall" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/textView2" android:singleLine="true" android:text="_______________________________________________________________________________________"></TextView>
+<TextView android:textAppearance="?android:attr/textAppearanceLarge" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/textView3" android:text="Press the button below to open your PC Terminal" android:textColor="@android:color/darker_gray"></TextView>
+<Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/buttonTerminal" android:text="Open Terminal"></Button>
+<TextView android:textAppearance="?android:attr/textAppearanceSmall" android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/textView4" android:text="__________________________________________________________________________________________" android:singleLine="true"></TextView>
+
 </LinearLayout>

@@ -152,8 +152,9 @@ public String read(String Filename)
 	} catch (DropboxException e) {
 	   Log.e(getClass().getSimpleName(), "Problem uploading:"+e.toString());
 	   return "";
-	}
+	}Log.i("Dropbox.read()",message);
 	return message;
+	
 }
 
 //*********************************************************************************************
@@ -181,6 +182,7 @@ public int write(String Filename,String Content){
 	   Log.e(getClass().getSimpleName(), "Problem uploading:"+e.toString());
 	   return 0;
 	}
+	Log.i("Dropbox.write()",Content);
 	return 1;
 }
 //*****************************************
@@ -215,6 +217,7 @@ public int write(String Filename,JSONObject ContentObj){
 		// TODO Auto-generated catch block
 		Log.e(getClass().getSimpleName(),e.toString());
 	}
+	Log.i("Dropbox.write()",ContentObj.toString());
 	return 1;
 }
 //*****************************************
@@ -243,6 +246,7 @@ public int write(String Filename,JSONArray ContentArray){
 	   Log.e(getClass().getSimpleName(), "Problem uploading:"+e.toString());
 	   return 0;
 	}
+	Log.i("Dropbox.write()",ContentArray.toString());
 	return 1;
 }
 
