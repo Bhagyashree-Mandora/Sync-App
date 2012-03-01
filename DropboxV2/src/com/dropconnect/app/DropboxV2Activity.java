@@ -36,7 +36,10 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.telephony.gsm.SmsManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.SlidingDrawer;
@@ -55,12 +58,19 @@ public class DropboxV2Activity extends Activity {
     // Note that this is a really insecure way to do this, and you shouldn't
     // ship code which contains your key & secret in such an obvious way.
     // Obfuscation is good.
-    final static private String APP_KEY = "iypm3vb6d6vxha0";
+    /*final static private String APP_KEY = "iypm3vb6d6vxha0";
     final static private String APP_SECRET = "e1kq1rhpwu6dfhx";
 
     // If you'd like to change the access type to the full Dropbox instead of
     // an app folder, change this value.
-    final static private AccessType ACCESS_TYPE = AccessType.DROPBOX;
+    final static private AccessType ACCESS_TYPE = AccessType.DROPBOX;*/
+	
+	final static private String APP_KEY = "jpweiyz9h76wc87";
+    final static private String APP_SECRET = "aopz5rzvv6pngk3";
+
+    // If you'd like to change the access type to the full Dropbox instead of
+    // an app folder, change this value.
+    final static private AccessType ACCESS_TYPE = AccessType.APP_FOLDER;
 
     ///////////////////////////////////////////////////////////////////////////
     //                      End app-specific settings.                       //
@@ -78,6 +88,8 @@ public class DropboxV2Activity extends Activity {
     private Button mSubmit; 
     private Button mListen;
     private Button bGetImage;
+    private Button bOpenTerminal;
+    
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -95,7 +107,12 @@ public class DropboxV2Activity extends Activity {
       
        
         
-        mSubmit = (Button)findViewById(R.id.auth_button);
+     /*  
+      * Button removed ....
+      * this option is now present in Menu
+      * 
+      * 
+      *  mSubmit = (Button)findViewById(R.id.auth_button);
         mSubmit.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 // This logs you out if you're logged in, or vice versa
@@ -107,15 +124,21 @@ public class DropboxV2Activity extends Activity {
                 }
             	
             }
-        });
+        });*/
         
         
-        //Listen Button
+        /*Button removed ....
+         * reason---no use for the user
+         * 
+         * but then too added in menu for debugging purpose
+         * 
+         * 
+         * //Listen Button
         mListen = (Button)findViewById(R.id.buttonListen);
         mListen.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
             	//Listen if there was any changes in the file
-            	/*try {
+            	try {
 					DropboxInputStream file= mApi.getFileStream("mobileread","");
 					byte[] temp=new byte[200];	
 					int count=file.read(temp);
@@ -133,7 +156,7 @@ public class DropboxV2Activity extends Activity {
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					showToast(e.toString());
-				}*/
+				}
 
             	
             	//Call service
@@ -141,12 +164,15 @@ public class DropboxV2Activity extends Activity {
             	Log.i(getClass().getSimpleName(),"intent created");
             	startService(myIntent);            	
             	Toast.makeText(getApplicationContext(), "Service Started", Toast.LENGTH_LONG).show();
-            }
-
-			
+            }	
 
 			
         });
+        */
+        
+        
+        
+        
         
         //Button to get the image
         bGetImage = (Button)findViewById(R.id.buttonGetimage);
@@ -162,7 +188,7 @@ public class DropboxV2Activity extends Activity {
 				Device Reciever= new Device("Desktop");
 				Reciever.DeviceReadFile="desktopread";
 				//____________________________________________
-				Command command=new Command("GetImageFromWebcam");
+				Command command=new Command("takephoto");
 				//_________________Put Some Data______________
 				JSONObject data=new JSONObject();
 				Request r= new Request(Sender,Reciever,command,data,getApplicationContext()) {
@@ -172,17 +198,17 @@ public class DropboxV2Activity extends Activity {
 						// TODO Auto-generated method stub
 						try {
 							//Decode and store the file on SD Card
-							String file=this.Data.getString("File");
+							String file=this.Data.getString("file");
 							//showToast(file);
-							byte[] decodedFile=Base64.decode(file, Base64.DEFAULT);
+							byte[] decodedFile=Base64.decode(file, Base64.DEFAULT);							
 							File root = Environment.getExternalStorageDirectory();
-							FileOutputStream f = new FileOutputStream(new File(root, "image.jpg"));
+							FileOutputStream f = new FileOutputStream(new File(root,"image"+this.requestID+".jpg"));
 							f.write(decodedFile, 0, decodedFile.length);
 				            f.close();
 							//Open the file in default app
 				            Intent intent = new Intent();
 				            intent.setAction(android.content.Intent.ACTION_VIEW);
-				            File file1 = new File(root,"image.jpg");
+				            File file1 = new File(root,"image"+this.requestID+".jpg");
 				            intent.setDataAndType(Uri.fromFile(file1), "image/*");
 				            startActivity(intent);
 						} catch (JSONException e) {
@@ -198,9 +224,23 @@ public class DropboxV2Activity extends Activity {
 					}
 				};
 				r.write();
+				showToast("Your Request for the Image has been sent.Please wait For the Image to come.It will be stored on your SD as image"+r.requestID+".jpg");
+				
 			}
 			
 		});
+        
+       //Button to open Terminal
+        bOpenTerminal= (Button)findViewById(R.id.buttonTerminal); 
+        bOpenTerminal.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+               Intent MyIntent = new Intent(getApplicationContext(), com.dropconnect.app.TerminalActivity.class);             
+                startActivity(MyIntent);
+            	
+            }
+        });
+        
+        
         // Display the proper UI state if logged in or not
         //used to set text on the auth_button
         setLoggedIn(mApi.getSession().isLinked());
@@ -223,23 +263,8 @@ public class DropboxV2Activity extends Activity {
         super.onSaveInstanceState(outState);
     }
 */
-    private void sendSMS(JSONObject obj) {
-				// TODO Auto-generated method stub
-				try {
-					sendSMS(obj.getString("to_number"),obj.getString("message"));
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					Log.i("json",e.toString());
-				}
-			}
-	private void sendSMS(String destination, String text) {
-		// TODO Auto-generated method stub
-    	PendingIntent pi = PendingIntent.getActivity(this, 0,
-                new Intent(this, DropboxV2Activity.class), 0);
-	SmsManager smsManager = SmsManager.getDefault();
-	SmsManager sms= smsManager;	
-	sms.sendTextMessage(destination,"", text,null,null );
-	}
+   
+	
     @Override
     protected void onResume() {
         super.onResume();
@@ -281,13 +306,7 @@ public class DropboxV2Activity extends Activity {
      */
     private void setLoggedIn(boolean loggedIn) {
     	mLoggedIn = loggedIn;
-    	if (loggedIn) {
-    		mSubmit.setText("Unlink from Dropbox");
-            
-    	} else {
-    		mSubmit.setText("Link with Dropbox");
-            
-    	}
+    	
     }
  
     private void checkAppKeySetup() {
@@ -378,4 +397,50 @@ public class DropboxV2Activity extends Activity {
 
         return session;
     }
+    //oN CREATE OPTION MENU
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+    super.onCreateOptionsMenu(menu);
+
+    MenuItem refresh=menu.add("Link");
+    if(mLoggedIn==true)
+    	refresh.setTitle("UnLink");
+    else
+    	refresh.setTitle("Link");
+    refresh.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+		
+		@Override
+		public boolean onMenuItemClick(MenuItem item) {
+			// TODO Auto-generated method stub
+			 if (mLoggedIn) {
+                 logOut();
+                 item.setTitle("Link");
+             } else {
+                 // Start the remote authentication
+                 mApi.getSession().startAuthentication(DropboxV2Activity.this);
+                 item.setTitle("Unlink");
+             }
+			return true;
+		}
+	});
+    MenuItem run=menu.add("listen");    
+    run.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+		
+		@Override
+		public boolean onMenuItemClick(MenuItem item) {
+			// TODO Auto-generated method stub
+			//Call service
+        	Intent myIntent = new Intent(getApplicationContext(),ListenService.class);            	
+        	Log.i(getClass().getSimpleName(),"intent created");
+        	startService(myIntent);            	
+        	Toast.makeText(getApplicationContext(), "Service Started", Toast.LENGTH_LONG).show();
+			return true;
+		}
+	});
+    
+   
+    return true;
+    
+    }    
 }

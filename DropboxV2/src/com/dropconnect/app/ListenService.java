@@ -1,6 +1,7 @@
 package com.dropconnect.app;
 
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.TimerTask;
@@ -16,6 +17,7 @@ import com.dropbox.client2.session.AppKeyPair;
 import com.dropbox.client2.session.Session.AccessType;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
@@ -34,12 +36,12 @@ public class ListenService extends Service {
     // Note that this is a really insecure way to do this, and you shouldn't
     // ship code which contains your key & secret in such an obvious way.
     // Obfuscation is good.
-    final static private String APP_KEY = "iypm3vb6d6vxha0";
-    final static private String APP_SECRET = "e1kq1rhpwu6dfhx";
+    final static private String APP_KEY = "jpweiyz9h76wc87";
+    final static private String APP_SECRET = "aopz5rzvv6pngk3";
 
     // If you'd like to change the access type to the full Dropbox instead of
     // an app folder, change this value.
-    final static private AccessType ACCESS_TYPE = AccessType.DROPBOX;
+    final static private AccessType ACCESS_TYPE = AccessType.APP_FOLDER;
 
     ///////////////////////////////////////////////////////////////////////////
     //                      End app-specific settings.                       //
@@ -128,9 +130,13 @@ public class ListenService extends Service {
 	
 	@Override
 public int onStartCommand(Intent intent ,int flags,int startid){
-		//Listen if there was any changes in the file
+		
 		///Here we make the list of all Classes than are present in our app that can handle some sort of command
-		ListenService.handlers.add(new Handlers("send", "SendSMS", "SmsHandler"));
+		ListenService.handlers.add(new Handlers("send", "msgapp", "SmsHandler"));
+		ListenService.handlers.add(new Handlers("send", "markread", "MarkRead"));
+		
+		
+		
 		Log.i("start command","start");
 		if(mApi!=null)
 		{
@@ -200,12 +206,14 @@ private  void listen() {
 						//Search for a class that can handle this
 						//Key for searching is command
 						String ClassName=ListenService.search(command);
-						MessageHandler h= null;
-						Class.forName(ClassName).getMethod(ClassName, JSONObject.class).invoke((Object)h, Message.getJSONObject("data"));
+						Class<MessageHandler> HandlerClass=(Class<MessageHandler>) Class.forName("com.dropconnect.app."+ClassName);
+						Constructor<MessageHandler> ctor = HandlerClass.getConstructor(JSONObject.class,Context.class);
+						MessageHandler object = ctor.newInstance(new Object[] { Message.getJSONObject("data"),this.getApplicationContext() });
+						object.onRecieve();						
 					}
 					if(type.equalsIgnoreCase("response")){
 						Log.i(getClass().getSimpleName(),"Handling Response");
-						int requestId=Message.getInt("requestId");
+						int requestId=Integer.parseInt(Message.getString("requestId"));
 						Request r =search(requestId);
 						r.Data=Message.getJSONObject("data");
 						r.onResponse();
@@ -231,6 +239,9 @@ private  void listen() {
 				// TODO Auto-generated catch block
 				Log.e(getClass().getSimpleName(), e.toString());
 			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				Log.e(getClass().getSimpleName(), e.toString());
+			} catch (InstantiationException e) {
 				// TODO Auto-generated catch block
 				Log.e(getClass().getSimpleName(), e.toString());
 			}
