@@ -1,3 +1,36 @@
 Sync-App
 
 An App which syncs Mobile and Desktop through internet and enables access to functionalities of both. This requires cloud storage space like Dropbox.
+
+
+
+To use the App:
+1. You need to have an online account at Dropbox (Register at www.dropbox.com)
+
+
+There are two parts of the App:
+1) Mobile Part (Android)
+2) Desktop Part (Python)
+
+
+For the mobile part:
+import the android app in Eclipse and you can use the code
+
+
+For Desktop Part:
+
+1. Run the setup.py file from the dropbox_api_setup folder. This can be used as your current working folder.
+2. Perform OAuth to link to your dropbox account online and get an access token
+    - run the doOauth.py file and follow the steps as mentioned
+      (A new token_store file will be created in the folder. This is your access token.)
+3. Copy all the files from protocol_and_command_classes folder in your working folder (i.e. dropbox_api_setup folder)
+    (These are the files which perform the listening, parsing, crafting and other protocol functions along with the 
+     classes for protocol commands)
+4. To start listening to the device_file on Dropbox run: python listend.py
+5. There are three Apps which are currently being developed:
+    i)  Message App (in the folder message_app_with_classes)
+    ii) Photo Security App
+    iii)Terminal App
+    (You can run any of the App by copying the files from the folder of the app to the working folder)
+
+    (In Message App: To compose a new message on laptop run: python msg_compose.py)
