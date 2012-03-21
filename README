@@ -14,8 +14,9 @@ There are two parts of the App:
 
 
 For the mobile part:
-import the android app in Eclipse and you can use the code
-
+import the Unify folder in Eclipse and you can use the code
+For installing the app you can install the .apk file @ Android apk/Unify.apk,
+Note:Before Installation Goto Setting>Application and check Unknown Sources
 
 For Desktop Part:
 
